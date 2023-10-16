@@ -1,4 +1,5 @@
+cliente/Nodo.class
 utils/Centroide.class
-servidor/Servidor.class
+servidor/ManejadorDeNodo.class
 utils/Punto.class
-cliente/NodoJava.class
+servidor/Productor.class

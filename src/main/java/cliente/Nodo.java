@@ -5,15 +5,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import utils.Centroide;
 import utils.Punto;
 
-public class NodoJava {
+public class Nodo {
 
     public static void main(String[] args) {
 
@@ -27,6 +25,7 @@ public class NodoJava {
             Scanner in = new Scanner(secuenciaDeEntrada);
 
             String line = in.nextLine();
+
             JSONObject objJSON = new JSONObject(line);
 
             // Obtener centroides
@@ -40,9 +39,19 @@ public class NodoJava {
             obtenerPuntos(puntosJSON, puntos);
             puntosJSON = new JSONArray();
 
+            boolean cambio = actualizarPuntos(puntos, centroides);
+            actualizarCentroides(puntos, centroides);
+
+            centroidsJSON = getJSONCentroids(centroides);
+
+            actualizarObjJSON(objJSON, new JSONArray(), centroidsJSON, cambio, false);
+
+            out.println(objJSON.toString());
+
             boolean terminar = false;
 
             while (!terminar) {
+
                 line = in.nextLine();
                 objJSON = new JSONObject(line);
 
@@ -59,16 +68,14 @@ public class NodoJava {
                 centroidsJSON = objJSON.getJSONArray("centroids");
                 obtenerCentroides(centroidsJSON, centroides);
 
-                boolean cambio = actualizarPuntos(puntos, centroides);
+                cambio = actualizarPuntos(puntos, centroides);
                 actualizarCentroides(puntos, centroides);
 
                 centroidsJSON = getJSONCentroids(centroides);
 
                 actualizarObjJSON(objJSON, puntosJSON, centroidsJSON, cambio, false);
-                out.println(objJSON.toString());
 
                 out.println(objJSON.toString());
-
             }
 
         } catch (IOException ex) {
@@ -86,11 +93,10 @@ public class NodoJava {
         for (int i = 0; i < centroides.length; i++) {
             JSONObject centroideJSON = centroidsJSON.getJSONObject(i);
             Centroide centroide = new Centroide();
-            centroide.setX(centroideJSON.getInt("x"));
-            centroide.setY(centroideJSON.getInt("y"));
+            centroide.setX(centroideJSON.getDouble("x"));
+            centroide.setY(centroideJSON.getDouble("y"));
             centroide.setN(centroideJSON.getInt("n"));
             centroides[i] = centroide;
-            System.out.println("Centroide: " + centroide);
         }
     }
 
@@ -108,7 +114,6 @@ public class NodoJava {
             punto.setY(puntoJSON.getInt("y"));
             punto.setCluster(puntoJSON.getInt("cluster"));
             puntos[i] = punto;
-            System.out.println("Punto: " + punto);
         }
     }
 
@@ -141,7 +146,7 @@ public class NodoJava {
         return Math.sqrt(Math.pow(centroide.getX() - punto.getX(), 2) + Math.pow(centroide.getY() - punto.getY(), 2));
     }
 
-    private static void actualizarCentroides(Punto[] puntos, Centroide[] centroides) {
+    public static void actualizarCentroides(Punto[] puntos, Centroide[] centroides) {
 
         for (Centroide centroide : centroides) {
             centroide.setX(0);

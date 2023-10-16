@@ -1,4 +1,5 @@
-/home/walterrg/Documents/2023-2/Programacion_Concurrente/pruebas/ep/NodoJava/src/main/java/utils/Centroide.java
-/home/walterrg/Documents/2023-2/Programacion_Concurrente/pruebas/ep/NodoJava/src/main/java/cliente/NodoJava.java
-/home/walterrg/Documents/2023-2/Programacion_Concurrente/pruebas/ep/NodoJava/src/main/java/utils/Punto.java
-/home/walterrg/Documents/2023-2/Programacion_Concurrente/pruebas/ep/NodoJava/src/main/java/servidor/Servidor.java
+/home/walterrg/Documents/2023-2/Programacion_Concurrente/pruebas/ep/KMeans/src/main/java/utils/Centroide.java
+/home/walterrg/Documents/2023-2/Programacion_Concurrente/pruebas/ep/KMeans/src/main/java/servidor/ManejadorDeNodo.java
+/home/walterrg/Documents/2023-2/Programacion_Concurrente/pruebas/ep/KMeans/src/main/java/utils/Punto.java
+/home/walterrg/Documents/2023-2/Programacion_Concurrente/pruebas/ep/KMeans/src/main/java/cliente/Nodo.java
+/home/walterrg/Documents/2023-2/Programacion_Concurrente/pruebas/ep/KMeans/src/main/java/servidor/Productor.java

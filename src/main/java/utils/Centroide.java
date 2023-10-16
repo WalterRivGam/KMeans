@@ -1,32 +1,32 @@
 package utils;
 
 public class Centroide {
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private int n;
 
     public Centroide() {
     }
 
-    public Centroide(int x, int y, int n) {
+    public Centroide(double x, double y, int n) {
         this.x = x;
         this.y = y;
         this.n = n;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 
