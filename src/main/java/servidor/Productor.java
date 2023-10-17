@@ -230,7 +230,6 @@ public class Productor {
             centroide.put("x", cents[i].getX());
             centroide.put("y", cents[i].getY());
             centroide.put("n", cents[i].getN());
-            centroidesJSON.put(centroide);
         }
     }
 
