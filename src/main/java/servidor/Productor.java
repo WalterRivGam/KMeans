@@ -80,8 +80,12 @@ public class Productor {
             int nroIteraciones = 100;
 
             Centroide[] cents = new Centroide[nroCentroides];
+            
+            int iteracionesRealizadas = 0;
 
             for (int i = 0; i < nroIteraciones; i++) {
+                
+                iteracionesRealizadas++;
 
                 // crear manejadores de nodos
                 for (int j = 0; j < nroNodos; j++) {
@@ -144,6 +148,8 @@ public class Productor {
                 }
 
             }
+            
+            System.out.println("\nNúmero de iteraciones realizadas: " + iteracionesRealizadas + "\n");
 
             // Cerrar los streams
             for (int i = 0; i < conexiones.length; i++) {
