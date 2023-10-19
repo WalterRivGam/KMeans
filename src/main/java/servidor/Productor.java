@@ -21,17 +21,20 @@ public class Productor {
 
     public static void main(String[] args) {
         try {
-            ServerSocket s = new ServerSocket(8189);
+            ServerSocket serverSocket = new ServerSocket(8189);
 
             int nroNodosConectados = 0;
             Socket[] conexiones = new Socket[nroNodos];
 
             // acepta conexiones de nodos
             while (nroNodosConectados < nroNodos) {
-                conexiones[nroNodosConectados] = s.accept();
+                System.out.println("\nEsperando conexion en el puerto 8189...");
+                conexiones[nroNodosConectados] = serverSocket.accept();
                 System.out.println("Se conectó el nodo: " + nroNodosConectados);
                 nroNodosConectados++;
             }
+
+            serverSocket.close();
 
             // Generar centroides aleatorios
             Random rand = new Random();
@@ -142,9 +145,70 @@ public class Productor {
 
             }
 
+            // Cerrar los streams
+            for (int i = 0; i < conexiones.length; i++) {
+                conexiones[i].getOutputStream().close();
+            }
+
+            // Cerrar las conexiones
+            for (int i = 0; i < conexiones.length; i++) {
+                conexiones[i].close();
+            }
+            
+            // Mostrar el resultado en un gráfico de python
+            // Primero ejecutar ServidorPython.py y descomentar el código siguiente
+            
+            /*
+            // Crear un Socket para conectarse al servidor Python y enviar los datos JSON
+            try {
+                Socket socketToPython = new Socket("127.0.0.1", 9999);
+                Punto[] puntos = obtenerPuntos(objs);
+                // Obtener el JSON final como cadena
+                String jsonFinal = obtenerJSONFinal(cents, puntos);
+
+                // Enviar los datos JSON al servidor Python
+                OutputStream outputStream = socketToPython.getOutputStream();
+                PrintWriter outToPython = new PrintWriter(outputStream, true);
+                outToPython.println(jsonFinal);
+
+                // Cerrar la conexión con el servidor Python
+                socketToPython.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            */
+
         } catch (IOException | InterruptedException | ExecutionException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private static String obtenerJSONFinal(Centroide[] centroides, Punto[] puntos) {
+        JSONObject jsonFinal = new JSONObject();
+
+        // Convierte los centroides en un JSON Array
+        JSONArray centroidesArray = new JSONArray();
+        for (Centroide centroide : centroides) {
+            JSONObject centroideJSON = new JSONObject();
+            centroideJSON.put("x", centroide.getX());
+            centroideJSON.put("y", centroide.getY());
+            centroideJSON.put("n", centroide.getN());
+            centroidesArray.put(centroideJSON);
+        }
+        jsonFinal.put("centroides", centroidesArray);
+
+        // Convierte los puntos en un JSON Array
+        JSONArray puntosArray = new JSONArray();
+        for (Punto punto : puntos) {
+            JSONObject puntoJSON = new JSONObject();
+            puntoJSON.put("x", punto.getX());
+            puntoJSON.put("y", punto.getY());
+            puntoJSON.put("cluster", punto.getCluster());
+            puntosArray.put(puntoJSON);
+        }
+        jsonFinal.put("puntos", puntosArray);
+
+        return jsonFinal.toString();
     }
 
     private static void enviarDatos(Socket[] conexiones, JSONObject[] objs) {
@@ -154,6 +218,7 @@ public class Productor {
                 secuenciaDeSalida = conexiones[j].getOutputStream();
                 PrintWriter out = new PrintWriter(secuenciaDeSalida, true);
                 out.println(objs[j].toString());
+
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
