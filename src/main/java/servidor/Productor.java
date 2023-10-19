@@ -20,6 +20,10 @@ public class Productor {
     private static int nroCentroides = 4;
 
     public static void main(String[] args) {
+        
+        long inicio = 0;
+        long fin = 0;
+        
         try {
             ServerSocket serverSocket = new ServerSocket(8189);
 
@@ -33,6 +37,8 @@ public class Productor {
                 System.out.println("Se conectó el nodo: " + nroNodosConectados);
                 nroNodosConectados++;
             }
+            
+            inicio = System.currentTimeMillis();
 
             serverSocket.close();
 
@@ -132,6 +138,8 @@ public class Productor {
 
                     // obtener puntos
                     Punto[] puntos = obtenerPuntos(objs);
+                    
+                    fin = System.currentTimeMillis();
 
                     // mostrar resultados
                     mostrarResultados(cents, puntos);
@@ -150,6 +158,10 @@ public class Productor {
             }
             
             System.out.println("\nNúmero de iteraciones realizadas: " + iteracionesRealizadas + "\n");
+            
+            long tiempoTranscurrido = fin - inicio;
+            
+            System.out.println("Tiempo total: " + tiempoTranscurrido + " ms\n");
 
             // Cerrar los streams
             for (int i = 0; i < conexiones.length; i++) {

@@ -15,17 +15,13 @@ public class Nodo {
 
     public static void main(String[] args) {
 
-        try {
-            Socket s = new Socket("127.0.0.1", 8189);
-
-            InputStream secuenciaDeEntrada = s.getInputStream();
-            OutputStream secuenciaDeSalida = s.getOutputStream();
-
-            PrintWriter out = new PrintWriter(secuenciaDeSalida, true);
-            Scanner in = new Scanner(secuenciaDeEntrada);
+        try (Socket socket = new Socket("127.0.0.1", 8189);
+                InputStream secuenciaDeEntrada = socket.getInputStream();
+                OutputStream secuenciaDeSalida = socket.getOutputStream();
+                PrintWriter out = new PrintWriter(secuenciaDeSalida, true);
+                Scanner in = new Scanner(secuenciaDeEntrada);) {
 
             String line = in.nextLine();
-
             JSONObject objJSON = new JSONObject(line);
 
             // Obtener centroides
@@ -40,6 +36,7 @@ public class Nodo {
             puntosJSON = new JSONArray();
 
             boolean cambio = actualizarPuntos(puntos, centroides);
+            
             actualizarCentroides(puntos, centroides);
 
             centroidsJSON = getJSONCentroids(centroides);
@@ -66,9 +63,11 @@ public class Nodo {
                 }
 
                 centroidsJSON = objJSON.getJSONArray("centroids");
+                
                 obtenerCentroides(centroidsJSON, centroides);
 
                 cambio = actualizarPuntos(puntos, centroides);
+                
                 actualizarCentroides(puntos, centroides);
 
                 centroidsJSON = getJSONCentroids(centroides);
@@ -84,7 +83,7 @@ public class Nodo {
     }
 
     /**
-     * Llena el arreglo de centroides usando los datos del arreglo JSON de centroides
+     * Actualiza el arreglo de centroides usando los datos del arreglo JSON de centroides
      *
      * @param centroidsJSON arreglo JSON de centroides
      * @param centroides arreglo de centroides
@@ -117,6 +116,13 @@ public class Nodo {
         }
     }
 
+    /**
+     * Actualiza los puntos, asignandoles el centroide más cercano
+     * 
+     * @param puntos 
+     * @param centroides
+     * @return verdadero si algún punto cambió de cluster o falso en caso contrario
+     */
     private static boolean actualizarPuntos(Punto[] puntos, Centroide[] centroides) {
         boolean cambio = false;
 
@@ -175,6 +181,12 @@ public class Nodo {
         return centroidsJSON;
     }
 
+    /**
+     * Obtiene un arreglo JSON de puntos usando el arreglo de puntos suministrado
+     * 
+     * @param puntos
+     * @return arreglo JSON de puntos
+     */
     private static JSONArray getJSONData(Punto[] puntos) {
         JSONArray data = new JSONArray();
         for (int i = 0; i < puntos.length; i++) {
