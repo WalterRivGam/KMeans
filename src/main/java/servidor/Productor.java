@@ -20,10 +20,10 @@ public class Productor {
     private static int nroCentroides = 4;
 
     public static void main(String[] args) {
-        
+
         long inicio = 0;
         long fin = 0;
-        
+
         try {
             ServerSocket serverSocket = new ServerSocket(8189);
 
@@ -37,7 +37,7 @@ public class Productor {
                 System.out.println("Se conectó el nodo: " + nroNodosConectados);
                 nroNodosConectados++;
             }
-            
+
             inicio = System.currentTimeMillis();
 
             serverSocket.close();
@@ -56,11 +56,16 @@ public class Productor {
             // Generar Datos aleatorios
             JSONArray[] dataNodo = new JSONArray[nroNodos];
 
+            int datosPorNodo = nroDatos / nroNodos;
+            int datosExtras = nroDatos % nroNodos;
+
             for (int i = 0; i < nroNodos; i++) {
 
                 dataNodo[i] = new JSONArray();
 
-                for (int j = i * (nroDatos / nroNodos); j < (i + 1) * (nroDatos / nroNodos); j++) {
+                int datosAsignados = datosPorNodo + (i < datosExtras ? 1 : 0);
+
+                for (int j = 0; j < datosAsignados; j++) {
                     JSONObject punto = new JSONObject();
                     int x = rand.nextInt(-1000, 1000);
                     int y = rand.nextInt(-1000, 1000);
@@ -86,11 +91,11 @@ public class Productor {
             int nroIteraciones = 100;
 
             Centroide[] cents = new Centroide[nroCentroides];
-            
+
             int iteracionesRealizadas = 0;
 
             for (int i = 0; i < nroIteraciones; i++) {
-                
+
                 iteracionesRealizadas++;
 
                 // crear manejadores de nodos
@@ -138,7 +143,7 @@ public class Productor {
 
                     // obtener puntos
                     Punto[] puntos = obtenerPuntos(objs);
-                    
+
                     fin = System.currentTimeMillis();
 
                     // mostrar resultados
@@ -156,11 +161,11 @@ public class Productor {
                 }
 
             }
-            
+
             System.out.println("\nNúmero de iteraciones realizadas: " + iteracionesRealizadas + "\n");
-            
+
             long tiempoTranscurrido = fin - inicio;
-            
+
             System.out.println("Tiempo total: " + tiempoTranscurrido + " ms\n");
 
             // Cerrar los streams
@@ -172,10 +177,9 @@ public class Productor {
             for (int i = 0; i < conexiones.length; i++) {
                 conexiones[i].close();
             }
-            
+
             // Mostrar el resultado en un gráfico de python
             // Primero ejecutar ServidorPython.py y descomentar el código siguiente
-            
             /*
             // Crear un Socket para conectarse al servidor Python y enviar los datos JSON
             try {
@@ -194,8 +198,7 @@ public class Productor {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            */
-
+             */
         } catch (IOException | InterruptedException | ExecutionException ex) {
             ex.printStackTrace();
         }
